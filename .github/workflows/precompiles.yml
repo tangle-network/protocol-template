@@ -48,7 +48,7 @@ jobs:
         with:
           command: ${{ matrix.platform.command }}
           target: ${{ matrix.platform.target }}
-          args: "--release --target-dir ${{ github.workspace }}/target/${{ matrix.platform.target }}"
+          args: "--release"
           strip: true
       - name: Rename the binary, named "protocol" to "protocol-$GITHUB_SHA"
         run: mv ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }} ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}
