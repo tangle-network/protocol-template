@@ -57,7 +57,7 @@ jobs:
         run: ls -la ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/
       - name: Release
         uses: softprops/action-gh-release@v2
-#        if: startsWith(github.ref, 'refs/heads/main')
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         with:
           tag_name: ${{ matrix.platform.bin }}-${{ matrix.platform.target }}
           files: ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}
