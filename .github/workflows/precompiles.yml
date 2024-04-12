@@ -48,7 +48,7 @@ jobs:
         with:
           command: ${{ matrix.platform.command }}
           target: ${{ matrix.platform.target }}
-          args: "--locked --release --target-dir ${{ github.workspace }}/target/${{ matrix.platform.target }}"
+          args: "--release --target-dir ${{ github.workspace }}/target/${{ matrix.platform.target }}"
           strip: true
       - name: List artifacts (mac or linux)
         if: ${{ matrix.platform.os == 'ubuntu-20.04' || matrix.platform.os == 'macOS-latest' || matrix.platform.os == 'macOS-13'}}

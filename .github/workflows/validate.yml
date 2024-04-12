@@ -58,7 +58,7 @@ jobs:
 
   testing:
     timeout-minutes: 90
-    name: cargo test
+    name: Cargo Test
     runs-on: macos-14
     steps:
       - name: checkout code
