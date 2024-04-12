@@ -50,9 +50,11 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: "--release --target-dir ${{ github.workspace }}/target/${{ matrix.platform.target }}"
           strip: true
+      - name: Rename the binary, named "protocol" to "protocol-$GITHUB_SHA"
+        run: mv ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }} ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}
       - name: List artifacts (mac or linux)
         if: ${{ matrix.platform.os == 'ubuntu-20.04' || matrix.platform.os == 'macOS-latest' || matrix.platform.os == 'macOS-13'}}
-        run: ls -la ${{ github.workspace }}/target/${{ matrix.platform.target }}
+        run: ls -la ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/
       - name: Publish artifacts
         uses: actions/upload-artifact@v2
         with:
