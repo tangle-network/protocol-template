@@ -1,0 +1,60 @@
+name: Generate Precompiles
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: rust-compile-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  precompiles:
+    name: Release - ${{ matrix.platform.release_for }}
+    strategy:
+      matrix:
+        platform:
+          - release_for: Linux-x86_64
+            os: ubuntu-20.04
+            target: x86_64-unknown-linux-gnu
+            bin: protocol
+            name: protocol-linux-x86_64.tar.gz
+            command: build
+
+          - release_for: macOS-x86_64
+            os: macOS-13
+            target: x86_64-apple-darwin
+            bin: protocol
+            name: protocol-Darwin-x86_64.tar.gz
+            command: build
+
+    runs-on: ${{ matrix.platform.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install protobuf (If linux)
+        if: ${{ matrix.platform.os == 'ubuntu-20.04' }}
+        run: sudo apt-get install protobuf-compiler
+      - name: Install protobuf and gmp (If macOS)
+        if: ${{ matrix.platform.os == 'macOS-latest' || matrix.platform.os == 'macOS-13'}}
+        run: brew install protobuf gmp
+      - name: Install protobuf (If windows)
+        if: ${{ matrix.platform.os == 'windows-latest' }}
+        run: choco install protoc
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v0
+        with:
+          command: ${{ matrix.platform.command }}
+          target: ${{ matrix.platform.target }}
+          args: "--locked --release --target-dir ${{ github.workspace }}/target/${{ matrix.platform.target }}"
+          strip: true
+      - name: List artifacts (mac or linux)
+        if: ${{ matrix.platform.os == 'ubuntu-20.04' || matrix.platform.os == 'macOS-latest' || matrix.platform.os == 'macOS-13'}}
+        run: ls -la ${{ github.workspace }}/target/${{ matrix.platform.target }}
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.platform.name }}
+          path: ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.head_ref }}
