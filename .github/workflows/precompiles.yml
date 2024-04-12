@@ -64,5 +64,6 @@ jobs:
         uses: softprops/action-gh-release@v2
 #        if: startsWith(github.ref, 'refs/heads/main')
         with:
+          tag: ${{ github.sha }}
           files: ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}
           name: ${{ matrix.platform.bin }}-${{ matrix.platform.target }}-${{ github.sha }}
