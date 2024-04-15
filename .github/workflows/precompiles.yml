@@ -62,3 +62,6 @@ jobs:
           tag_name: ${{ matrix.platform.bin }}-${{ matrix.platform.target }}
           files: ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}
           name: ${{ matrix.platform.bin }}-${{ matrix.platform.target }}-${{ github.sha }}
+          make_latest: "true"
+      - name: Print the Sha256 of the binary
+        run: sha256sum ${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}
