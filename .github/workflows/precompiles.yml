@@ -122,6 +122,7 @@ jobs:
         run: |
           $outputFile = "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe.sha256"
           $outputFile = $outputFile -replace '\\','/'
+          echo "Output file is: $outputFile"
           echo "SHA_PATH=$outputFile" >> $GITHUB_ENV
       - name: Release (mac and linux)
         uses: softprops/action-gh-release@v2
@@ -131,5 +132,5 @@ jobs:
           files: |
             ${{ env.BIN_PATH }}
             ${{ env.SHA_PATH }}
-          name: Precompile-${{ matrix.platform.arch }}-${{ matrix.platform.os }}-${{ github.sha }}
+          name: Protocol-${{ matrix.platform.os }}-${{ matrix.platform.arch }}--${{ github.sha }}
           make_latest: "true"
