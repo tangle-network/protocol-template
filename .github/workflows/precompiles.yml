@@ -126,13 +126,7 @@ jobs:
           $outputFile = $outputFile -replace '\\','/'
           echo "Output file is: $outputFile"
           echo "SHA_PATH=$outputFile" >> $GITHUB_ENV
-      - name: Release (mac and linux)
-        uses: softprops/action-gh-release@v2
+      - name: Release
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        with:
-          tag_name: ${{ matrix.platform.bin }}-${{ matrix.platform.target }}
-          files: |
-            ${{ env.BIN_PATH }}
-            ${{ env.SHA_PATH }}
-          name: Protocol-${{ matrix.platform.os }}-${{ matrix.platform.arch }}--${{ github.sha }}
-          make_latest: "true"
+        run: |
+          gh release create ${{ matrix.platform.target }}-${{ github.sha }} ${{ env.BIN_PATH }} ${{ env.SHA_PATH }}
