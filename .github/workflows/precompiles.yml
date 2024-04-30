@@ -112,16 +112,17 @@ jobs:
           $inputFile = "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe"
           $outputFile = "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe.sha256"
           
-          $outputFile = $outputFile -replace '\\', '/'
-          
           # Calculate the SHA256 hash of the input file
           $sha256 = Get-FileHash -Path $inputFile -Algorithm SHA256
 
           # Extract the hash value from the FileHash object
           $hashValue = $sha256.Hash
+          
+          # print the hash value
+          echo "SHA-256: $hashValue"
 
           # Write the hash value to the output file
-          $hashValue | Out-File -FilePath $outputFile
+          Set-Content -Path $outputFile -Value $hashValue
       - name: Save the sha256 path to the github environment (mac and linux)
         if: ${{ matrix.platform.os != 'windows-latest' }}
         run: echo "SHA_PATH=${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.sha256" >> $GITHUB_ENV
@@ -132,6 +133,8 @@ jobs:
           $outputFile = "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe.sha256"
           $outputFile = $outputFile -replace '\\','/'
           echo "Output file is: $outputFile"
+          # cat the contents of the output file
+          Get-Content -Path $outputFile
           echo "SHA_PATH=$outputFile" >> $GITHUB_ENV
       - name: Release
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
