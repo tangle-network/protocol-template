@@ -10,6 +10,9 @@ concurrency:
   group: rust-compile-${{ github.sha }}
   cancel-in-progress: true
 
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 jobs:
   precompiles:
     name: Release - ${{ matrix.platform.release_for }}
