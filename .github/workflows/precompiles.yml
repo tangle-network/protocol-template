@@ -75,9 +75,11 @@ jobs:
         if: ${{ matrix.platform.os == 'windows-latest' }}
         shell: powershell
         run: Rename-Item -Path "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}.exe" -NewName "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe"
-      - name: Save the binary path to the github environment (windows)
+      - name: Save the binary path to the github environment (windows), replace all '\' with '/'
         if: ${{ matrix.platform.os == 'windows-latest' }}
-        run: echo "BIN_PATH=${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe" >> $GITHUB_ENV
+        shell: powershell
+        run: |
+          echo "BIN_PATH=${{ github.workspace }}\target\${{ matrix.platform.target }}\release\${{ matrix.platform.bin }}-${{ github.sha }}.exe" | sed -e 's/\\/\//g' >> $GITHUB_ENV
       - name: Save the binary path to the github environment (mac or linux)
         if: ${{ matrix.platform.os != 'windows-latest' }}
         run: echo "BIN_PATH=${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}" >> $GITHUB_ENV
