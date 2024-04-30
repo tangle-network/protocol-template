@@ -111,7 +111,9 @@ jobs:
           # Define the input and output file paths
           $inputFile = "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe"
           $outputFile = "${{ github.workspace }}/target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ github.sha }}.exe.sha256"
-
+          
+          $outputFile = $outputFile -replace '\\', '/'
+          
           # Calculate the SHA256 hash of the input file
           $sha256 = Get-FileHash -Path $inputFile -Algorithm SHA256
 
