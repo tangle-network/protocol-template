@@ -137,6 +137,7 @@ jobs:
           Get-Content $outputFile
           echo "SHA_PATH=$outputFile" >> $GITHUB_ENV
       - name: Release
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        # if the commit's event_name is push and (the ref is refs/heads/main or refs/heads/master)
+        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') }}
         run: |
           gh release create ${{ matrix.platform.target }}-${{ github.sha }} ${{ env.BIN_PATH }} ${{ env.SHA_PATH }}
